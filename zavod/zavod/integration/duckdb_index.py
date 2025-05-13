@@ -227,6 +227,9 @@ class DuckDBIndex(BaseIndex[DS, CE]):
 
     def build_field_stopwords(self, field: str, num_tokens: int) -> None:
         field_stopwords_pct = self.stopwords_pct.get(field, DEFAULT_STOPWORDS_PCT)
+        if field_stopwords_pct == 0.0:
+            log.info("Stopwords disabledk for field '%s'.", field)
+            return
         limit = int((num_tokens / 100) * field_stopwords_pct)
         limit = min(limit, self.max_stopwords)
         log.info(

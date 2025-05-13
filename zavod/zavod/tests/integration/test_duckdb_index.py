@@ -7,6 +7,7 @@ from nomenklatura import CompositeEntity, Resolver
 from zavod.entity import Entity
 from zavod.integration.duckdb_index import DuckDBIndex
 from zavod.crawl import crawl_dataset
+from zavod.integration.tokenizer import WORD_FIELD
 from zavod.meta.dataset import Dataset
 from zavod.store import get_store
 
@@ -134,7 +135,7 @@ def test_stopwords(testdataset1: Dataset, resolver: Resolver[Entity]):
     # 15% most common tokens as stopwords -> ignore FirstA
 
     data_dir = Path(mkdtemp()).resolve()
-    index = DuckDBIndex(view, data_dir, {"stopwords_pct": 15})
+    index = DuckDBIndex(view, data_dir, {"stopwords_pct": {WORD_FIELD: 15.0}})
     index.build()
 
     entity_matches = {}
@@ -150,7 +151,7 @@ def test_stopwords(testdataset1: Dataset, resolver: Resolver[Entity]):
     # 0% most common tokens as stopwords -> ignore nothing
 
     data_dir = Path(mkdtemp()).resolve()
-    index = DuckDBIndex(view, data_dir, {"stopwords_pct": 0})
+    index = DuckDBIndex(view, data_dir, {"stopwords_pct": {WORD_FIELD: 0.0}})
     index.build()
 
     entity_matches = {}
